@@ -1,0 +1,1 @@
+javadoc -use -version -author -d ~/jbproject/DLV2_0/docs -sourcepath  ~/jbproject/DLV2_0/src -windowtitle DLV-Wrapper-Documentation DLV

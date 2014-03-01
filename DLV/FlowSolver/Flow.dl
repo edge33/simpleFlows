@@ -1,0 +1,56 @@
+%matrix(5).
+
+%nodo(25).
+
+nodo(F):-nodo(D),F=D-1,D>1.
+
+arc(X,Y):-nodo(X),nodo(Y),Y=X+1,not #mod(X,K,0),matrix(K).
+arc(X,Y):-nodo(X),nodo(Y),Y=X+K,matrix(K).
+
+arc(X,Y):-arc(Y,X).
+
+inPath(X,Y,C)|outPath(X,Y,C) :- reached(X,C),arc(X,Y).
+
+%per colore
+:-inPath(X,Y,C),inPath(X,Y,C1),C!=C1.
+
+%per forzare che deve avere esattamente un entrata e esattamente un uscita
+:-inPath(X,Y,_),inPath(X1,Y,_),not bridge(Y), X!=X1.
+:-inPath(X,Y,_),inPath(X,Y1,_),not bridge(X), Y!=Y1.
+
+
+%:-bridge(Y),inPath(X,Y,_),inPath(Y,Z,_), not X=Y-1,not Z=Y+1.
+
+
+%lo start ha solo archi entranti
+:-inPath(X,Y,_),start(Y,_).
+
+:-inPath(X,Y,_),inPath(Y,X,_).
+
+%l'end deve avere esattamente un arco entrante
+:-inPath(X,Y,_),end(X,_).
+
+
+reached(X,C):-start(X,C).
+reached(Y,C):-reached(X,C),inPath(X,Y,C).
+
+:-end(X,C),not reached(X,C).
+
+
+%si devono attraversare tutti essere tutti i nodi 
+nodiInPath(X):-inPath(X,_,_).
+nodiInPath(Y):-inPath(_,Y,_).
+
+:-nodo(X),not nodiInPath(X).
+
+%entrate dal bridge
+:-inPath(X,B,C),bridge(B),X=B-1, not inPath(B,Y,C),Y=B+1.
+:-inPath(X,B,C),bridge(B),X=B+1,not inPath(B,Y,C),Y=B-1.
+:-inPath(X,B,C),bridge(B),X=B-K,not inPath(B,Y,C),Y=B+K,matrix(K).
+:-inPath(X,B,C),bridge(B),X=B+K,not inPath(B,Y,C),Y=B-K,matrix(K).
+
+sopra(Y,X):-bridge(Y),X=Y-K,matrix(K).
+sotto(Y,X):-bridge(Y),X=Y+K,matrix(K).
+
+destra(Y,X):-bridge(Y),X=Y+1.
+sinistra(Y,X):-bridge(Y),X=Y-1.
