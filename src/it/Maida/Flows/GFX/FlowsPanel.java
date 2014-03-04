@@ -7,14 +7,16 @@ import it.Maida.Flows.DLVhandling.DlvInvoker;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -30,18 +32,21 @@ public class FlowsPanel extends JPanel {
 	private int offset;
 	private FlowStruct flowStruct;
 	private int colorSelected = FlowStruct.GREEN;
-
-	private BufferedImage bridge;
+	private Color ardesia = new Color(112, 128, 144);
+	private Color amaranto = new Color(229, 43, 80);
 	
+	private BufferedImage bridge;
 	// private HashMap<Integer, ArrayList<Point>> flows;
 	private final int circleWidth = 75;
 	private int scaledCircleWidth;
 	private double scale;
 	private int scaledTile;
 
+	private JButton addLevel;
+	private JButton reset;
 	private JButton solveButton;
 
-	public FlowsPanel(int gridSize) {
+	public FlowsPanel(final int gridSize) {
 
 		this.setLayout(null);
 
@@ -49,9 +54,14 @@ public class FlowsPanel extends JPanel {
 		flowStruct = new FlowStruct(gridSize);
 		this.solveButton = new JButton("Solve");
 
-		solveButton.setBounds(700, 20, 75, 50);
+		this.solveButton = new JButton("Solve");
+		this.addLevel = new JButton("Default Level");
+		this.reset = new JButton("Reset");
+
+		add(addLevel);
 		add(solveButton);
-		
+		add(reset);
+
 		try {
 			this.bridge = ImageIO.read(new File("resources/bridge.png"));
 		} catch (IOException e1) {
@@ -60,6 +70,67 @@ public class FlowsPanel extends JPanel {
 		} 
 		
 		
+		
+		this.addLevel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				File file = new File("LevelsFlow/"
+						+ String.valueOf(gridSize) + "x"
+						+ String.valueOf(gridSize) + ".txt");
+				FileReader inputFil = null;
+				try {
+					inputFil = new FileReader(file);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				BufferedReader in = new BufferedReader(inputFil);
+
+				String line = null;
+				try {
+					line = in.readLine();
+				} catch (IOException e2) {
+					// TODO Auto-generated catch block
+					e2.printStackTrace();
+				}
+
+				while (line != null) {
+					int x = 0;
+					int y = 0;
+					int color = 0;
+
+					try {
+
+						System.out.println(line);
+						String[] splitted = line.split(" ");
+
+						x = Integer.parseInt(splitted[0]);
+						y = Integer.parseInt(splitted[1]);
+						color = Integer.parseInt(splitted[2]);
+						flowStruct.setColorAt(x, y, color);
+
+						line = in.readLine();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
+				}
+				repaint();
+
+			}
+		});
+
+		this.reset.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				FlowsPanel.this.flowStruct.resetAll();
+				repaint();
+			}
+		});
+
 		this.solveButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -214,7 +285,6 @@ public class FlowsPanel extends JPanel {
 					colorSelected = FlowStruct.BRIDGE;
 					repaint();
 				}
-
 			}
 		});
 
@@ -224,6 +294,10 @@ public class FlowsPanel extends JPanel {
 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
+
+		solveButton.setBounds(this.getWidth() - 150, 20, 75, 50);
+		addLevel.setBounds(this.getWidth() - 150, 100, 120, 50);
+		reset.setBounds(this.getWidth() - 150, 180, 75, 50);
 
 		double hScale = getWidth() / (double) (gridSize * TILE_SIZE);
 		double vScale = getHeight() / (double) ((gridSize + 1) * TILE_SIZE);
@@ -373,6 +447,7 @@ public class FlowsPanel extends JPanel {
 		g.drawOval((int) (scaledTile * gridSize + 100 * scale),
 				(int) (offset + 500 * scale), scaledCircleWidth / 2,
 				scaledCircleWidth / 2);
+
 		
 		//disegno il bridge
 		if ( colorSelected == FlowStruct.BRIDGE )
@@ -381,9 +456,14 @@ public class FlowsPanel extends JPanel {
 		
 		g.drawImage(bridge, (int) (scaledTile * gridSize + 150 * scale),(int) (offset * scale),scaledCircleWidth/2,scaledCircleWidth/2, null);
 		g.setColor(Color.GRAY);
+		
+		
+		g.setColor(Color.GRAY);
+
 	}
 
 	private void drawFlows(Graphics g) {
+
 		for (Integer key : flowStruct.getArc().keySet()) {
 			switch (key) {
 			case FlowStruct.BLUE:
@@ -415,6 +495,12 @@ public class FlowsPanel extends JPanel {
 				break;
 			case FlowStruct.LIGHT_GRAY:
 				g.setColor(Color.lightGray);
+				break;
+			case FlowStruct.ARDESIA:
+				g.setColor(ardesia);
+				break;
+			case FlowStruct.AMARANTO:
+				g.setColor(amaranto);
 				break;
 			default:
 				break;
@@ -541,7 +627,18 @@ public class FlowsPanel extends JPanel {
 					(int) (scaledTile * i + offset + 13 * scale),
 					scaledCircleWidth, scaledCircleWidth);
 			break;
-			
+		case FlowStruct.ARDESIA:
+			g.setColor(ardesia);
+			g.fillOval((int) (scaledTile * j + offset + 13 * scale),
+					(int) (scaledTile * i + offset + 13 * scale),
+					scaledCircleWidth, scaledCircleWidth);
+			break;
+		case FlowStruct.AMARANTO:
+			g.setColor(amaranto);
+			g.fillOval((int) (scaledTile * j + offset + 13 * scale),
+					(int) (scaledTile * i + offset + 13 * scale),
+					scaledCircleWidth, scaledCircleWidth);
+			break;
 		case FlowStruct.BRIDGE:
 			g.drawImage(bridge,(int) (scaledTile * j + offset + 13 * scale),
 					(int) (scaledTile * i + offset + 13 * scale),

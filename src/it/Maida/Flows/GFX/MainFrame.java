@@ -11,7 +11,8 @@ public class MainFrame extends JFrame {
 
 	private static MainFrame instance;
 	private JPanel contentPanel;
-	private MainPanel mainPanel;	
+	private MainPanel mainPanel;
+	
 	public static MainFrame getInstance() {
 		if ( instance == null )
 			instance = new MainFrame();

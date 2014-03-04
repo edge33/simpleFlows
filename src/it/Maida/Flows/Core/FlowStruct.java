@@ -17,7 +17,9 @@ public class FlowStruct {
 	public static final int PINK = 8;
 	public static final int WHITE = 9;
 	public static final int LIGHT_GRAY = 10;
-	public static final int BRIDGE = 11;
+	public static final int ARDESIA = 11;
+	public static final int AMARANTO = 12;
+	public static final int BRIDGE = 15;
 
 	private int[][] scheme;
 	private int size;
@@ -32,6 +34,15 @@ public class FlowStruct {
 		arcs = new HashMap<Integer, ArrayList<Point>>();
 		init();
 
+	}
+
+	public void resetAll() {
+		arcs.clear();
+		for (int i = 0; i < scheme.length; i++) {
+			for (int j = 0; j < scheme.length; j++) {
+				scheme[i][j] = NONE;
+			}
+		}
 	}
 
 	private void init() {
