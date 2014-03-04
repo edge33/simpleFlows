@@ -295,9 +295,6 @@ public class FlowsPanel extends JPanel {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
 
-		solveButton.setBounds(this.getWidth() - 150, 20, 75, 50);
-		addLevel.setBounds(this.getWidth() - 150, 100, 120, 50);
-		reset.setBounds(this.getWidth() - 150, 180, 75, 50);
 
 		double hScale = getWidth() / (double) (gridSize * TILE_SIZE);
 		double vScale = getHeight() / (double) ((gridSize + 1) * TILE_SIZE);
@@ -308,6 +305,10 @@ public class FlowsPanel extends JPanel {
 
 		offset = (int) (25 * scale);
 
+		solveButton.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale) , 20, 75, 50);
+		addLevel.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale) , 100, 120, 50);
+		reset.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale), 180, 75, 50);
+		
 		gridLenght = (int) (scaledTile * gridSize);
 
 		int k = 0;
