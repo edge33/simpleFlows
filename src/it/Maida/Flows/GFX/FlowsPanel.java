@@ -34,7 +34,7 @@ public class FlowsPanel extends JPanel {
 	private int colorSelected = FlowStruct.GREEN;
 	private Color ardesia = new Color(112, 128, 144);
 	private Color amaranto = new Color(229, 43, 80);
-	
+	private BufferedImage backGround;
 	private BufferedImage bridge;
 	// private HashMap<Integer, ArrayList<Point>> flows;
 	private final int circleWidth = 75;
@@ -67,17 +67,22 @@ public class FlowsPanel extends JPanel {
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-		} 
-		
-		
-		
+		}
+
+		try {
+			this.backGround = ImageIO
+					.read(new File("resources/Background.jpg"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		this.addLevel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				File file = new File("LevelsFlow/"
-						+ String.valueOf(gridSize) + "x"
-						+ String.valueOf(gridSize) + ".txt");
+				File file = new File("LevelsFlow/" + String.valueOf(gridSize)
+						+ "x" + String.valueOf(gridSize) + ".txt");
 				FileReader inputFil = null;
 				try {
 					inputFil = new FileReader(file);
@@ -275,7 +280,7 @@ public class FlowsPanel extends JPanel {
 					colorSelected = FlowStruct.NONE;
 					repaint();
 				}
-				
+
 				if ((x > scaledTile * FlowsPanel.this.gridSize + 150 * scale && x < scaledTile
 						* FlowsPanel.this.gridSize
 						+ 150
@@ -294,8 +299,8 @@ public class FlowsPanel extends JPanel {
 
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
-
-
+		g.drawImage(this.backGround, 0, 0, this.getWidth(), this.getHeight(),
+				null);
 		double hScale = getWidth() / (double) (gridSize * TILE_SIZE);
 		double vScale = getHeight() / (double) ((gridSize + 1) * TILE_SIZE);
 
@@ -305,10 +310,15 @@ public class FlowsPanel extends JPanel {
 
 		offset = (int) (25 * scale);
 
-		solveButton.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale) , 20, 75, 50);
-		addLevel.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale) , 100, 120, 50);
-		reset.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale), 180, 75, 50);
-		
+		solveButton.setBounds(
+				(int) (gridSize * scaledTile + offset + 200 * scale), 20, 75,
+				50);
+		addLevel.setBounds(
+				(int) (gridSize * scaledTile + offset + 200 * scale), 100, 120,
+				50);
+		reset.setBounds((int) (gridSize * scaledTile + offset + 200 * scale),
+				180, 75, 50);
+
 		gridLenght = (int) (scaledTile * gridSize);
 
 		int k = 0;
@@ -449,16 +459,16 @@ public class FlowsPanel extends JPanel {
 				(int) (offset + 500 * scale), scaledCircleWidth / 2,
 				scaledCircleWidth / 2);
 
-		
-		//disegno il bridge
-		if ( colorSelected == FlowStruct.BRIDGE )
+		// disegno il bridge
+		if (colorSelected == FlowStruct.BRIDGE)
 			g.drawRect((int) (scaledTile * gridSize + 150 * scale), offset - 2,
 					selectedColorBox / 2, selectedColorBox / 2);
-		
-		g.drawImage(bridge, (int) (scaledTile * gridSize + 150 * scale),(int) (offset * scale),scaledCircleWidth/2,scaledCircleWidth/2, null);
+
+		g.drawImage(bridge, (int) (scaledTile * gridSize + 150 * scale),
+				(int) (offset * scale), scaledCircleWidth / 2,
+				scaledCircleWidth / 2, null);
 		g.setColor(Color.GRAY);
-		
-		
+
 		g.setColor(Color.GRAY);
 
 	}
@@ -641,9 +651,9 @@ public class FlowsPanel extends JPanel {
 					scaledCircleWidth, scaledCircleWidth);
 			break;
 		case FlowStruct.BRIDGE:
-			g.drawImage(bridge,(int) (scaledTile * j + offset + 13 * scale),
+			g.drawImage(bridge, (int) (scaledTile * j + offset + 13 * scale),
 					(int) (scaledTile * i + offset + 13 * scale),
-					scaledCircleWidth, scaledCircleWidth,null);
+					scaledCircleWidth, scaledCircleWidth, null);
 			break;
 		}
 	}
