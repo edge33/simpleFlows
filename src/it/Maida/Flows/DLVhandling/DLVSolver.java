@@ -25,6 +25,7 @@ public class DLVSolver {
 		this.flowStruct = flowStruct;
 		this.program = new Program();
 		this.colorsAdded = new HashSet();
+
 	}
 
 	public void solve() {
@@ -39,8 +40,8 @@ public class DLVSolver {
 
 		Predicate startPredicate = new Predicate("start", 2);
 		Predicate endPredicate = new Predicate("end", 2);
-		
-		Predicate bridgePredicate = new Predicate("bridge",1);
+
+		Predicate bridgePredicate = new Predicate("bridge", 1);
 
 		nodePredicate.addLiteral(nodePredicate.new Literal(
 				new String[] { String.valueOf(sizeOfMatrix * sizeOfMatrix) }));
@@ -55,24 +56,27 @@ public class DLVSolver {
 					int numberNode = (sizeOfMatrix * i) + (j + 1);
 					String color = String.valueOf(flowStruct.getColorAt(i, j));
 
-					if ( flowStruct.getColorAt(i, j) == FlowStruct.BRIDGE ) {
-						
-						bridgePredicate.addLiteral(bridgePredicate.new Literal(new String[] { String.valueOf(numberNode) } ));
-						
+					if (flowStruct.getColorAt(i, j) == FlowStruct.BRIDGE) {
+
+						bridgePredicate.addLiteral(bridgePredicate.new Literal(
+								new String[] { String.valueOf(numberNode) }));
+
 					} else {
-						
+
 						// colorPredicate.addLiteral(colorPredicate.new Literal(
 						// new String[] { color }));
-	
+
 						if (colorsAdded.contains(color)) {
-	
+
 							endPredicate.addLiteral(endPredicate.new Literal(
 									new String[] { String.valueOf(numberNode),
 											color }));
 						} else {
-							startPredicate.addLiteral(startPredicate.new Literal(
-									new String[] { String.valueOf(numberNode),
-											color }));
+							startPredicate
+									.addLiteral(startPredicate.new Literal(
+											new String[] {
+													String.valueOf(numberNode),
+													color }));
 							colorsAdded.add(color);
 						}
 					}
@@ -86,7 +90,6 @@ public class DLVSolver {
 		program.addPredicate(matrixPredicate);
 		program.addPredicate(startPredicate);
 		program.addPredicate(endPredicate);
-
 
 		DlvHandler dlvHandler = new DlvHandler("DLV" + File.separator
 				+ "dl.exe");
