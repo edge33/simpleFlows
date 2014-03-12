@@ -17,12 +17,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.text.StyledEditorKit.ForegroundAction;
 
 public class FlowsPanel extends JPanel {
 
@@ -42,9 +45,11 @@ public class FlowsPanel extends JPanel {
 	private double scale;
 	private int scaledTile;
 
-	private JButton addLevel;
+	private JButton loadLevel;
 	private JButton reset;
 	private JButton solveButton;
+	
+	private JComboBox<String> sampleLevels;
 
 	public FlowsPanel(final int gridSize) {
 
@@ -53,14 +58,35 @@ public class FlowsPanel extends JPanel {
 		this.gridSize = gridSize;
 		flowStruct = new FlowStruct(gridSize);
 		this.solveButton = new JButton("Solve");
+		
+		this.sampleLevels = new JComboBox<String>();
 
+		final File folder = new File( "LevelsFlow" + File.separator + gridSize );
+		
+		File[] levels = folder.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String fileName) {
+				
+				if ( fileName.toLowerCase().endsWith(".txt") ) {
+					File file = new File(dir + File.separator + fileName);
+					file.getName();
+					FlowsPanel.this.sampleLevels.addItem( file.getName() );
+				}
+				return true;
+			}
+		
+		});
+//		sampleLevels.set
+		
 		this.solveButton = new JButton("Solve");
-		this.addLevel = new JButton("Default Level");
+		this.loadLevel = new JButton("LoadLevel");
 		this.reset = new JButton("Reset");
 
-		add(addLevel);
+		add(loadLevel);
 		add(solveButton);
 		add(reset);
+		add(sampleLevels);
 
 		try {
 			this.bridge = ImageIO.read(new File("resources/bridge.png"));
@@ -77,20 +103,23 @@ public class FlowsPanel extends JPanel {
 			e1.printStackTrace();
 		}
 
-		this.addLevel.addActionListener(new ActionListener() {
+		this.loadLevel.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				File file = new File("LevelsFlow/" + String.valueOf(gridSize)
-						+ "x" + String.valueOf(gridSize) + ".txt");
-				FileReader inputFil = null;
+
+				String selectedLevelName = (String) sampleLevels.getSelectedItem();
+				
+				File level = new File( folder + File.separator + selectedLevelName);
+				
+				FileReader inputFile = null;
 				try {
-					inputFil = new FileReader(file);
+					inputFile = new FileReader(level);
 				} catch (FileNotFoundException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
-				BufferedReader in = new BufferedReader(inputFil);
+				BufferedReader in = new BufferedReader(inputFile);
 
 				String line = null;
 				try {
@@ -107,7 +136,6 @@ public class FlowsPanel extends JPanel {
 
 					try {
 
-						System.out.println(line);
 						String[] splitted = line.split(" ");
 
 						x = Integer.parseInt(splitted[0]);
@@ -310,14 +338,10 @@ public class FlowsPanel extends JPanel {
 
 		offset = (int) (25 * scale);
 
-		solveButton.setBounds(
-				(int) (gridSize * scaledTile + offset + 200 * scale), 20, 75,
-				50);
-		addLevel.setBounds(
-				(int) (gridSize * scaledTile + offset + 200 * scale), 100, 120,
-				50);
-		reset.setBounds((int) (gridSize * scaledTile + offset + 200 * scale),
-				180, 75, 50);
+		solveButton.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale), 20, 75, 50);
+		sampleLevels.setBounds((int) (gridSize * scaledTile + offset + 200 * scale) , 100, 100, 20);
+		loadLevel.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale), 150, 120, 50);
+		reset.setBounds((int) (gridSize * scaledTile + offset + 200 * scale), 250, 75, 50);
 
 		gridLenght = (int) (scaledTile * gridSize);
 

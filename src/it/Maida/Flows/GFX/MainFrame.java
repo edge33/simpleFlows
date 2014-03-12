@@ -28,7 +28,7 @@ public class MainFrame extends JFrame {
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 		this.setSize(850, 610);
-		this.setMinimumSize(new Dimension(850,610));
+		this.setMinimumSize(new Dimension(950,610));
 		
 		this.mainPanel = new MainPanel();
 		
