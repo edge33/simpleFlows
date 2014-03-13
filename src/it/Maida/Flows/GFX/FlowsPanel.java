@@ -27,19 +27,24 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.text.StyledEditorKit.ForegroundAction;
 
+import com.sun.xml.internal.ws.api.model.MEP;
+
 public class FlowsPanel extends JPanel {
 
 	private final int TILE_SIZE = 100;
+	
 	private int gridSize;
 	private int gridLenght;
 	private int offset;
+	
 	private FlowStruct flowStruct;
 	private int colorSelected = FlowStruct.GREEN;
 	private Color ardesia = new Color(112, 128, 144);
 	private Color amaranto = new Color(229, 43, 80);
+	
 	private BufferedImage backGround;
 	private BufferedImage bridge;
-	// private HashMap<Integer, ArrayList<Point>> flows;
+	
 	private final int circleWidth = 75;
 	private int scaledCircleWidth;
 	private double scale;
@@ -48,6 +53,7 @@ public class FlowsPanel extends JPanel {
 	private JButton loadLevel;
 	private JButton reset;
 	private JButton solveButton;
+	private JButton backButton;
 	
 	private JComboBox<String> sampleLevels;
 
@@ -57,51 +63,20 @@ public class FlowsPanel extends JPanel {
 
 		this.gridSize = gridSize;
 		flowStruct = new FlowStruct(gridSize);
+		
 		this.solveButton = new JButton("Solve");
 		
-		this.sampleLevels = new JComboBox<String>();
-
-		final File folder = new File( "LevelsFlow" + File.separator + gridSize );
 		
-		File[] levels = folder.listFiles(new FilenameFilter() {
-			
-			@Override
-			public boolean accept(File dir, String fileName) {
-				
-				if ( fileName.toLowerCase().endsWith(".txt") ) {
-					File file = new File(dir + File.separator + fileName);
-					file.getName();
-					FlowsPanel.this.sampleLevels.addItem( file.getName() );
-				}
-				return true;
-			}
-		
-		});
-//		sampleLevels.set
+		final File folder = initComboBox(gridSize);
 		
 		this.solveButton = new JButton("Solve");
 		this.loadLevel = new JButton("LoadLevel");
 		this.reset = new JButton("Reset");
+		this.backButton = new JButton("Back to Main Menu");
 
-		add(loadLevel);
-		add(solveButton);
-		add(reset);
-		add(sampleLevels);
+		
 
-		try {
-			this.bridge = ImageIO.read(new File("resources/bridge.png"));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-
-		try {
-			this.backGround = ImageIO
-					.read(new File("resources/Background.jpg"));
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		initImages();
 
 		this.loadLevel.addActionListener(new ActionListener() {
 
@@ -187,11 +162,14 @@ public class FlowsPanel extends JPanel {
 				int x = e.getX();
 				int y = e.getY();
 
-				if ((x > offset && x < offset + gridLenght)
-						&& (y > offset && y < offset + gridLenght)) {
+				if ((x > offset && x < offset + gridLenght)	&& (y > offset && y < offset + gridLenght)) {
 					int i = (y - offset) / scaledTile;
 					int j = (x - offset) / scaledTile;
-					flowStruct.setColorAt(i, j, colorSelected);
+					if ( e.getButton() == MouseEvent.BUTTON1 ) {
+						flowStruct.setColorAt(i, j, colorSelected);
+					} else if ( e.getButton() == MouseEvent.BUTTON3 ) {
+						flowStruct.setColorAt(i, j, FlowStruct.NONE);
+					}
 					repaint();
 				}
 
@@ -320,7 +298,61 @@ public class FlowsPanel extends JPanel {
 				}
 			}
 		});
+		
+		
+		this.backButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				MainFrame.getInstance().switchToPanel( MainFrame.getInstance().getMainPanel() );
+			}
+		});
+		
+		
+		add(loadLevel);
+		add(solveButton);
+		add(reset);
+		add(sampleLevels);
+		add(backButton);
 
+	}
+
+	private void initImages() {
+		try {
+			this.bridge = ImageIO.read(new File("resources/bridge.png"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		try {
+			this.backGround = ImageIO.read(new File("resources/Background.jpg"));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+
+	private File initComboBox(final int gridSize) {
+		this.sampleLevels = new JComboBox<String>();
+
+		final File folder = new File( "LevelsFlow" + File.separator + gridSize );
+		
+		File[] levels = folder.listFiles(new FilenameFilter() {
+			
+			@Override
+			public boolean accept(File dir, String fileName) {
+				
+				if ( fileName.toLowerCase().endsWith(".txt") ) {
+					File file = new File(dir + File.separator + fileName);
+					file.getName();
+					FlowsPanel.this.sampleLevels.addItem( file.getName() );
+				}
+				return true;
+			}
+		
+		});
+		return folder;
 	}
 
 	protected void paintComponent(Graphics g) {
@@ -342,6 +374,7 @@ public class FlowsPanel extends JPanel {
 		sampleLevels.setBounds((int) (gridSize * scaledTile + offset + 200 * scale) , 100, 100, 20);
 		loadLevel.setBounds( (int) (gridSize * scaledTile + offset + 200 * scale), 150, 120, 50);
 		reset.setBounds((int) (gridSize * scaledTile + offset + 200 * scale), 250, 75, 50);
+		backButton.setBounds((int) (gridSize * scaledTile + offset + 200 * scale), 310, 150, 50);
 
 		gridLenght = (int) (scaledTile * gridSize);
 

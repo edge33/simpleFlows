@@ -15,9 +15,13 @@ import javax.swing.JPanel;
 public class MainPanel extends JPanel {
 
 	private JComboBox<Integer> gridSizeSelector;
+	
 	private JButton okButton;
+	
 	private FlowsPanel flowsPanel;
+	
 	private final int MAXIMUM_SIZE = 10;
+	
 	private BufferedImage homeImage;
 
 	public MainPanel() {

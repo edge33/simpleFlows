@@ -1,8 +1,5 @@
-%matrix(5).
 
-%nodo(25).
-
-nodo(F):-nodo(D),F=D-1,D>1.
+nodo(F) :- nodo(D), F = D - 1, D > 1.
 
 arc(X,Y):-nodo(X),nodo(Y),Y=X+1,not #mod(X,K,0),matrix(K).
 arc(X,Y):-nodo(X),nodo(Y),Y=X+K,matrix(K).
@@ -17,9 +14,6 @@ inPath(X,Y,C)|outPath(X,Y,C) :- reached(X,C),arc(X,Y).
 %per forzare che deve avere esattamente un entrata e esattamente un uscita
 :-inPath(X,Y,_),inPath(X1,Y,_),not bridge(Y), X!=X1.
 :-inPath(X,Y,_),inPath(X,Y1,_),not bridge(X), Y!=Y1.
-
-
-%:-bridge(Y),inPath(X,Y,_),inPath(Y,Z,_), not X=Y-1,not Z=Y+1.
 
 
 %lo start ha solo archi entranti
@@ -37,7 +31,7 @@ reached(Y,C):-reached(X,C),inPath(X,Y,C).
 :-end(X,C),not reached(X,C).
 
 
-%si devono attraversare tutti essere tutti i nodi 
+%si devono attraversare tutti i nodi 
 nodiInPath(X):-inPath(X,_,_).
 nodiInPath(Y):-inPath(_,Y,_).
 

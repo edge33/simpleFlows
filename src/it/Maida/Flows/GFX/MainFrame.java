@@ -55,6 +55,11 @@ public class MainFrame extends JFrame {
 	} 
 	
 	
+	public MainPanel getMainPanel() {
+		return mainPanel;
+	}
+	
+	
 	public static void main(String[] args) {
 		MainFrame mainFrame = MainFrame.getInstance();
 		mainFrame.init();
