@@ -85,7 +85,7 @@ public class FlowsPanel extends JPanel {
 
 				String selectedLevelName = (String) sampleLevels.getSelectedItem();
 				
-				File level = new File( folder + File.separator + selectedLevelName);
+				File level = new File( folder + File.separator + selectedLevelName + ".txt");
 				
 				FileReader inputFile = null;
 				try {
@@ -143,8 +143,7 @@ public class FlowsPanel extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DlvInvoker dlvInvoker = new DlvInvoker(new DLVCommand(
-						new DLVSolver(flowStruct)));
+				DlvInvoker dlvInvoker = new DlvInvoker(new DLVCommand( new DLVSolver(flowStruct)));
 				if (FlowsPanel.this.flowStruct.validateStruct())
 					dlvInvoker.solve();
 				else
@@ -346,7 +345,7 @@ public class FlowsPanel extends JPanel {
 				if ( fileName.toLowerCase().endsWith(".txt") ) {
 					File file = new File(dir + File.separator + fileName);
 					file.getName();
-					FlowsPanel.this.sampleLevels.addItem( file.getName() );
+					FlowsPanel.this.sampleLevels.addItem( file.getName().substring(0, file.getName().length() - 4) );
 				}
 				return true;
 			}
