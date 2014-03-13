@@ -43,10 +43,8 @@ public class DLVSolver {
 
 		Predicate bridgePredicate = new Predicate("bridge", 1);
 
-		nodePredicate.addLiteral(nodePredicate.new Literal(
-				new String[] { String.valueOf(sizeOfMatrix * sizeOfMatrix) }));
-		matrixPredicate.addLiteral(matrixPredicate.new Literal(
-				new String[] { String.valueOf(sizeOfMatrix) }));
+		nodePredicate.addLiteral(nodePredicate.new Literal( new String[] { String.valueOf(sizeOfMatrix * sizeOfMatrix) }));
+		matrixPredicate.addLiteral(matrixPredicate.new Literal( new String[] { String.valueOf(sizeOfMatrix) }));
 
 		for (int i = 0; i < flowStruct.getSize(); i++) {
 			for (int j = 0; j < flowStruct.getSize(); j++) {
@@ -58,13 +56,10 @@ public class DLVSolver {
 
 					if (flowStruct.getColorAt(i, j) == FlowStruct.BRIDGE) {
 
-						bridgePredicate.addLiteral(bridgePredicate.new Literal(
-								new String[] { String.valueOf(numberNode) }));
+						bridgePredicate.addLiteral(bridgePredicate.new Literal( new String[] { String.valueOf(numberNode) }));
 
 					} else {
 
-						// colorPredicate.addLiteral(colorPredicate.new Literal(
-						// new String[] { color }));
 
 						if (colorsAdded.contains(color)) {
 
@@ -91,8 +86,7 @@ public class DLVSolver {
 		program.addPredicate(startPredicate);
 		program.addPredicate(endPredicate);
 
-		DlvHandler dlvHandler = new DlvHandler("DLV" + File.separator
-				+ "dl.exe");
+		DlvHandler dlvHandler = new DlvHandler("DLV" + File.separator + "dl.exe");
 
 		dlvHandler.setProgram(program);
 

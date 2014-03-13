@@ -73,7 +73,6 @@ public class FlowsPanel extends JPanel {
 		this.loadLevel = new JButton("LoadLevel");
 		this.reset = new JButton("Reset");
 		this.backButton = new JButton("Back to Main Menu");
-
 		
 
 		initImages();
